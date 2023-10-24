@@ -1,7 +1,7 @@
 <#
 This script assumes a SQL query using the custom SQL-Query function (which doesn't require SQLServer tools being installed on the host machine)
 It also assumes that you are specifically seeking a database named "ADP"
-- replacing default <ADP> or <servername> values prior to use is a must
+- replacing default "YOURDB" or <servername> values prior to use is a must
 - you will also (quite likely) need to modify your Table/Column names in the $Query variables so this script is able to query correctly
 - the user account used to launch the powershell instance must have at least read permissions on the database and table
 #>
@@ -42,14 +42,15 @@ $Query = "SELECT
       ,[phone_cell]
       ,[email_personal]
       ,[name_display]
-  FROM [ADP].[dbo].[vw_current_employees_list] with (NoLock)
+  FROM [YOURDB].[dbo].[YOURTABLEORVIEWNAME] with (NoLock)
   Where phone_cell is not NULL and status_worker = 'ACTIVE'"
 
-  $results = SQL-Query -Instance <servername> -Database "<ADP>" -Query $Query
+  $results = SQL-Query -Instance <SOMESERVERNAME> -Database "YOURDB" -Query $Query
 
   $cell = $results.Results | Select-Object name_display,login_name,job_location,phone_cell
 
-$cell | Write-Output | Where {$_.login_name -like "*$uname*"}
+$cell | Where {$_.login_name -like "*$uname*"} | Out-GridView 
+
 
     } '2' {
     'You chose to search by display name'
@@ -67,14 +68,15 @@ $Query = "SELECT
       ,[phone_cell]
       ,[email_personal]
       ,[name_display]
-  FROM [ADP].[dbo].[vw_current_employees_list] with (NoLock)
+  FROM FROM [YOURDB].[dbo].[YOURTABLEORVIEWNAME] with (NoLock)
   Where phone_cell is not NULL and status_worker = 'ACTIVE'"
 
-  $results = SQL-Query -Instance <servername> -Database "<ADP>" -Query $Query
+  $results = SQL-Query -Instance <SOMESERVERNAME> -Database "YOURDB" -Query $Query
 
   $cell = $results.Results | Select-Object name_display,login_name,job_location,phone_cell
 
-$cell | Write-Output | Where {$_.name_display -like "*$dn*"}
+$cell | Where {$_.name_display -like "*$dn*"} | Out-GridView
+
 
     } '3' {
     'You chose to search by Office location'
@@ -92,14 +94,15 @@ $Query = "SELECT
       ,[phone_cell]
       ,[email_personal]
       ,[name_display]
-  FROM [ADP].[dbo].[vw_current_employees_list] with (NoLock)
+  FROM FROM [YOURDB].[dbo].[YOURTABLEORVIEWNAME] with (NoLock)
   Where phone_cell is not NULL and status_worker = 'ACTIVE'"
 
-  $results = SQL-Query -Instance <servername> -Database "<ADP>" -Query $Query
+ $results = SQL-Query -Instance <SOMESERVERNAME> -Database "YOURDB" -Query $Query
 
   $cell = $results.Results | Select-Object name_display,login_name,job_location,phone_cell
 
-$cell | Write-Output | Where {$_.job_location -like "*$office*"}
+$cell | Where {$_.job_location -like "*$office*"} | Out-GridView
+
 
     } 
     }
